@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace MultipleHandlers.Query
 {
-    public class FooBQueryHandler : IMyCustomStrategy<FooQuery, string>
+    public class FooBQueryHandler : IRequestHandler<FooQuery, string>
     {
         public Task<string> Handle(FooQuery request, CancellationToken cancellationToken)
         {

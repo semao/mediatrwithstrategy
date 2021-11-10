@@ -7,9 +7,9 @@ namespace MultipleHandlers.Query
 {
     public class FooQueryHandlerFactory : IRequestHandler<FooQuery, string>
     {
-        private readonly Func<FooQuery, IMyCustomStrategy<FooQuery, string>> _factory;
+        private readonly Func<FooQuery, IRequestHandler<FooQuery, string>> _factory;
 
-        public FooQueryHandlerFactory(Func<FooQuery, IMyCustomStrategy<FooQuery, string>> factory)
+        public FooQueryHandlerFactory(Func<FooQuery, IRequestHandler<FooQuery, string>> factory)
         {
             _factory = factory;
         }

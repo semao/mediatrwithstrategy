@@ -22,9 +22,12 @@ namespace MultipleHandlers.Controllers
         }
 
         [HttpGet]
-        public async Task<string> GetAsync(CancellationToken ct)
+        public async Task<IList<string>> GetAsync(CancellationToken ct)
         {
-            return await _mediator.Send(new FooQuery(2), ct);
+            return new List<string>() {                            
+                await _mediator.Send(new FooQuery(1), ct),
+                await _mediator.Send(new FooQuery(2), ct)
+            };
         }
     }
 }

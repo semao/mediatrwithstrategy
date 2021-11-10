@@ -53,19 +53,18 @@ namespace MultipleHandlers
             builder.RegisterGeneric(typeof(RequestExceptionActionProcessorBehavior<,>)).As(typeof(IPipelineBehavior<,>));
             builder.RegisterGeneric(typeof(RequestExceptionProcessorBehavior<,>)).As(typeof(IPipelineBehavior<,>));
 
-            builder.Register((c, p) =>
-            {
-                var key = p.TypedAs<FooQuery>().Taxonomy;
-                return c.ResolveKeyed<IMyCustomStrategy<FooQuery,string>> (key);
-            }).AsImplementedInterfaces();
-
             builder.RegisterType<FooAQueryHandler>()
-                .Keyed<IMyCustomStrategy<FooQuery, string>> (1);
+                .Keyed<IRequestHandler<FooQuery, string>> (1);
             builder.RegisterType<FooBQueryHandler>()
-                .Keyed<IMyCustomStrategy<FooQuery, string>> (2);
-            builder.RegisterType<FooQueryHandlerFactory>().AsImplementedInterfaces();
+                .Keyed<IRequestHandler<FooQuery, string>> (2);
+            builder.RegisterType<FooQueryHandlerFactory>().AsSelf();
 
-            //builder.RegisterType<FooQueryHandler>().InstancePerLifetimeScope();
+            builder.Register<Func<FooQuery, IRequestHandler<FooQuery, string>>>(ctx =>
+            {
+                var c = ctx.Resolve<IComponentContext>();
+                return t => c.ResolveKeyed<IRequestHandler<FooQuery, string>>(t.Taxonomy);
+            });
+
 
             builder.Register<ServiceFactory>(ctx =>
             {
