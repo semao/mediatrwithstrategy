@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Reflection;
 using Autofac;
 using MediatR;
@@ -57,14 +55,8 @@ namespace MultipleHandlers
                 .Keyed<IRequestHandler<FooQuery, string>> (1);
             builder.RegisterType<FooBQueryHandler>()
                 .Keyed<IRequestHandler<FooQuery, string>> (2);
-            builder.RegisterType<FooQueryHandlerFactory>().AsSelf();
 
-            builder.Register<Func<FooQuery, IRequestHandler<FooQuery, string>>>(ctx =>
-            {
-                var c = ctx.Resolve<IComponentContext>();
-                return t => c.ResolveKeyed<IRequestHandler<FooQuery, string>>(t.Taxonomy);
-            });
-
+            builder.RegisterType<StrategyRequestHandler<FooQuery, string>>().As<IRequestHandler<FooQuery, string>>();
 
             builder.Register<ServiceFactory>(ctx =>
             {
